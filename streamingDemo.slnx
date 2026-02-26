@@ -1,5 +1,4 @@
 <Solution>
-  <Project Path="guestSite/guestSite.csproj" />
   <Project Path="streamingDemo_BE/streamingDemo_BE.csproj" />
   <Project Path="streamingDemo_FE/streamingDemo_FE.csproj" Id="070ca29b-168d-41e4-ab96-b1337ee87bf6" />
 </Solution>
