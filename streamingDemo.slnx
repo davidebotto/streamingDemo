@@ -1,1 +1,4 @@
-<Solution />
+<Solution>
+  <Project Path="streamingDemo_BE/streamingDemo_BE.csproj" />
+  <Project Path="streamingDemo_FE/streamingDemo_FE.csproj" />
+</Solution>
