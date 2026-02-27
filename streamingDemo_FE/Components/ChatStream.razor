@@ -9,7 +9,7 @@
         <button @onclick="Stop" disabled="@(!isStreaming)">Stop</button>
     </div>
 
-    <pre class="answer">@Output</pre>
+    <div class="answer">@Output</div>
 </div>
 
 @code {
@@ -85,9 +85,20 @@
 }
 
 <style>
+    
+    :host {
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    }
+
+    .chat textarea {
+        font-family: inherit;
+    }
+
     .chat > textarea {
-        width: 100%;
+        width: 80%;
         min-height: 80px;
+        border-radius: 16px;
+        padding: 12px;
     }
     .answer {
         margin-top: 16px;
