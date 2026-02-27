@@ -3,14 +3,52 @@
 @inject IJSRuntime JS
 
 <div class="chat">
-    <textarea @bind="Prompt" placeholder="Scrivi il prompt..."></textarea>
+    <textarea @bind="Prompt" placeholder="Scrivi il prompt..." disabled="@isStreaming"></textarea>
     <div>
-        <button @onclick="Start">Invia</button>
+        <button @onclick="Start" disabled="@isStreaming">Invia</button>
         <button @onclick="Stop" disabled="@(!isStreaming)">Stop</button>
     </div>
 
-    <div class="answer">@Output</div>
+    <div class="answer">
+        @if (!string.IsNullOrEmpty(Output))
+        {
+            <p>@Output</p>
+        }
+
+        @if (_sources.Any())
+        {
+            <div class="sources">
+                <strong>Fonti rilevanti:</strong>
+                <ul>
+                    @foreach (var source in _sources)
+                    {
+                        <li>📄 @source</li>
+                    }
+                </ul>
+            </div>
+        }
+
+       
+        @if (!string.IsNullOrEmpty(_tipsTitle) || _tipsItems.Any())
+        {
+            <div class="tips">
+                <strong>@_tipsTitle</strong>
+                <ul>
+                    @foreach (var tip in _tipsItems)
+                    {
+                        <li>💡 @tip</li>
+                    }
+                </ul>
+            </div>
+        }
+
+        @if (isStreaming)
+        {
+            <span class="cursor">▋</span>
+        }
+    </div>
 </div>
+
 
 @code {
     [Parameter] public string? Endpoint { get; set; } // lo passi come attributo del custom element
@@ -21,6 +59,10 @@
     private string Prompt { get; set; } = "";
     private string Output { get; set; } = "";
     private bool isStreaming = false;
+
+    private List<string> _sources = new();
+    private string _tipsTitle = string.Empty;
+    private List<string> _tipsItems = new();
 
     protected override async Task OnInitializedAsync()
     {
@@ -34,10 +76,14 @@
 
         // reset
         Output = "";
+        _sources.Clear();
+        _tipsTitle = string.Empty;
+        _tipsItems.Clear();
         isStreaming = true;
 
         var url = $"{Endpoint}?prompt={Uri.EscapeDataString(Prompt)}";
         _sseHandle = await _module!.InvokeAsync<IJSObjectReference>("startSse", url, _selfRef);
+        
         Prompt = string.Empty;
         StateHasChanged();
     }
@@ -57,6 +103,30 @@
     {
         Output += chunk;
         StateHasChanged(); // aggiorna UI
+        return Task.CompletedTask;
+    }
+
+    [JSInvokable]
+    public Task OnSources(string[] items)
+    {
+        _sources = items.ToList();
+        StateHasChanged();
+        return Task.CompletedTask;
+    }
+
+    [JSInvokable]
+    public Task OnTipsTitle(string chunk)
+    {
+        _tipsTitle += chunk;
+        StateHasChanged();
+        return Task.CompletedTask;
+    }
+
+    [JSInvokable]
+    public Task OnTips(string[] items)
+    {
+        _tipsItems = items.ToList();
+        StateHasChanged();
         return Task.CompletedTask;
     }
 
@@ -84,23 +154,48 @@
     }
 }
 
+@* CSS scoped opzionale *@
 <style>
-    
-    :host {
-      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    .chat {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
     }
 
-    .chat textarea {
-        font-family: inherit;
-    }
-
-    .chat > textarea {
-        width: 80%;
+    textarea {
+        width: 100%;
         min-height: 80px;
-        border-radius: 16px;
-        padding: 12px;
+        resize: vertical;
     }
+
     .answer {
-        margin-top: 16px;
+        white-space: pre-wrap;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        padding: 1rem;
+        min-height: 60px;
+    }
+
+    .sources, .tips {
+        margin-top: 1rem;
+        padding-top: 0.75rem;
+        border-top: 1px solid #eee;
+        font-size: 0.9rem;
+    }
+
+        .sources ul, .tips ul {
+            margin: 0.25rem 0 0 0;
+            padding-left: 1.25rem;
+        }
+
+    .cursor {
+        display: inline-block;
+        animation: blink 1s step-start infinite;
+    }
+
+    @@keyframes blink {
+        50% {
+            opacity: 0;
+        }
     }
 </style>

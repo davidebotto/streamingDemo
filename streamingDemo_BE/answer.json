@@ -1,0 +1,17 @@
+﻿{
+  "question": "Parlami del progetto NADI-ACQUA",
+  "answer": "Perfetto! Ho trovato questi documenti utili:\n\n\n📄 **Scheda tecnica – Prodotto X**\n\n\n📑 **DOP – Prodotto X**\n\n\n🧩 **Documentazione ciclo correlato**\n\n\nVuoi aprirli qui o preferisci scaricarli?",
+  "relevantSources": [
+    "02-allegato2-Manuale.pdf",
+    "01-allegato1-Gestione allevamenti ittici.pdf",
+    "0-Linee_guida.pdf"
+  ],
+  "tips": {
+    "title": "In base alla tua richiesta, potresti approfondire anche:",
+    "items": [
+      "Caratteristiche tecniche del Prodotto X",
+      "Dichiarazione di prestazione (DOP) del Prodotto X",
+      "Ciclo applicativo correlato"
+    ]
+  }
+}
