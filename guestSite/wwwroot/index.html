@@ -11,13 +11,22 @@
         :host {
             font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
         }
+
+        chat-stream {
+            display: block; /* o display: flow-root se vuoi anche un nuovo BFC */
+            width: 100%;
+        }
+
     </style>
   
 
 </head>
 <body>
 
-     <chat-stream endpoint="https://localhost:7052/api/chat/sse"></chat-stream>
+    <div style="margin-inline: 16px;">
+        <chat-stream endpoint="https://localhost:7052/api/chat/sse"></chat-stream>
+    </div>
+     
 
 
     <script type="module" src="_content/Microsoft.AspNetCore.Components.CustomElements/js/dist/Release/Microsoft.AspNetCore.Components.CustomElements.lib.module.js"></script>
